@@ -5,10 +5,15 @@
  * access outside this moment. See src/extract.js for what actually reads
  * the LinkedIn page.
  *
- * Local dev: change DEFAULT_PARVISO_URL to your localhost origin
- * (e.g. "http://localhost:3000") while testing against a local frontend.
+ * DEFAULT_PARVISO_URL is temporarily the "preview" branch's Vercel
+ * deployment — production (tracerank.vercel.app) is still on main, which
+ * predates this whole feature (no /workspace?import= handler exists
+ * there yet). Point this back at production once preview merges to main.
+ *
+ * Local dev: change it to your localhost origin (e.g. "http://localhost:3000")
+ * while testing against a local frontend instead.
  */
-const DEFAULT_PARVISO_URL = "https://tracerank.vercel.app";
+const DEFAULT_PARVISO_URL = "https://adversarial-r-sum-scanner-git-preview-rjaada42-9496s-projects.vercel.app";
 
 function getParvisoBaseUrl() {
   return new Promise((resolve) => {
