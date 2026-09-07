@@ -1,0 +1,199 @@
+/* Direction C tokens, reused from the main app (frontend/app/globals.css):
+   canvas #F3F0E8, ink #121211, muted #6E6B65, campaign blue #2448E8,
+   success green #10714B. System font stack instead of Albert Sans/IBM
+   Plex Mono here on purpose — an extension popup's default CSP makes an
+   external @font-face/Google Fonts link unreliable, and a v0.1 popup
+   isn't worth fighting that for. */
+
+:root {
+  --canvas: #F3F0E8;
+  --surface: #FFFFFF;
+  --ink: #121211;
+  --muted: #6E6B65;
+  --border: #E6E3DE;
+  --blue: #2448E8;
+  --blue-ink: #16224A;
+  --green: #10714B;
+  --amber: #B45309;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 320px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-ui);
+}
+
+.header {
+  height: 44px;
+  background: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-mark {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.header-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #DCE6FF;
+}
+
+main {
+  padding: 18px 16px 16px;
+}
+
+h1 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 4px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  margin: 0 0 6px;
+}
+
+.subline {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.subline.strong {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.checklist {
+  list-style: none;
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checklist li {
+  font-size: 12px;
+  color: var(--ink);
+  padding-left: 18px;
+  position: relative;
+}
+
+.checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.primary-btn {
+  width: 100%;
+  height: 38px;
+  background: var(--blue);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.primary-btn:hover { background: #1E3ECC; }
+.primary-btn:active { background: #1935A8; }
+.primary-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.footnote {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.center-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 8px 4px 4px;
+}
+
+.check-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.wrong-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #F4ECDB;
+  color: var(--amber);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.link {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.link:hover { text-decoration: underline; }
+
+[hidden] { display: none !important; }

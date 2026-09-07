@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Parviso</title>
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="../icons/icon32.png" alt="" class="brand-mark" />
+      <span class="brand-name">Parviso</span>
+    </div>
+    <span id="header-tag" class="header-tag" hidden>READY TO IMPORT</span>
+  </header>
+
+  <main>
+    <section id="state-loading" class="center-state">
+      <p class="subline">Checking this page…</p>
+    </section>
+
+    <section id="state-detected" hidden>
+      <p class="eyebrow">JOB DETECTED</p>
+      <h1 id="job-title"></h1>
+      <p id="job-company" class="subline"></p>
+      <ul class="checklist">
+        <li>Title and company found</li>
+        <li id="chk-words">Full description</li>
+        <li>Page URL attached</li>
+      </ul>
+      <button id="import-btn" type="button" class="primary-btn">
+        <span aria-hidden="true">↗</span> Import and open Parviso
+      </button>
+      <p class="footnote">Parviso reads this job only when you click Import.</p>
+    </section>
+
+    <section id="state-imported" hidden class="center-state">
+      <div class="check-circle" aria-hidden="true">✓</div>
+      <h1>Imported ✓</h1>
+      <p id="imported-title" class="subline strong"></p>
+      <p id="imported-company" class="subline"></p>
+    </section>
+
+    <section id="state-wrong" hidden class="center-state">
+      <div class="wrong-icon" aria-hidden="true">⌕</div>
+      <h1>No LinkedIn job found</h1>
+      <p class="subline">Open a job posting on LinkedIn, then click the Parviso icon again.</p>
+      <a class="link" href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer">Open LinkedIn Jobs →</a>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
