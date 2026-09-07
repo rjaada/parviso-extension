@@ -25,7 +25,7 @@ Concretely, that design decision shows up as:
   (`src/extract.js`) is injected on demand via
   `chrome.scripting.executeScript` from `popup.js`, once, when the popup
   opens. There is nothing running on LinkedIn pages the rest of the time.
-- **The popup says so.** "Parviso reads this job only when you click
+- **The popup says so.** "Nothing is sent to Parviso until you click
   Import" isn't just copy — it's literally true of the code.
 - **Only job data is read.** Title, company, description, and the page
   URL. Nothing about the user's connections, feed, or profile.
@@ -40,11 +40,37 @@ work, chosen deliberately over having the extension call the backend
 directly (which would mean designing and securing a whole new auth
 surface for comparatively little UX gain at this stage).
 
-**This means the main app needs one small change to actually consume it**
-— reading `?import=` on `/workspace` and pre-filling the JD field from the
-decoded JSON (`{ title, company, description, url }`). That's a change in
-the `Resume` repo (`WorkspacePageClient.tsx`), not this one, and hasn't
-been made yet.
+The main app's `/workspace` route reads that `?import=` param and
+pre-fills the JD field from the decoded JSON (`{ title, company,
+description, url }`) — done, on the `preview` branch of the `Resume`
+repo (`WorkspacePageClient.tsx`). `DEFAULT_PARVISO_URL` below currently
+points at that preview deployment for the same reason.
+
+## Popup states
+
+Seven states total, built from the Pencil design "C1.2 · Parviso
+LinkedIn Import — Refined Concepts":
+
+- **Loading** — brief, while the active tab is checked.
+- **Job detected** — title/company/checklist, a "Preview description"
+  toggle (expands the captured text inline, no separate view), Import.
+- **Description looks incomplete** — shown instead of "Job detected"
+  when the captured description is under `INCOMPLETE_WORD_THRESHOLD`
+  (120 words) in `popup.js` — real job descriptions essentially never
+  run that short, so it almost always means LinkedIn's "show more" was
+  collapsed and only a fragment got captured. "Preview and correct"
+  reveals what was captured so the user can expand the posting on
+  LinkedIn and retry, rather than silently importing a partial JD.
+- **Job already imported** — shown instead of "Job detected" when the
+  current job's URL is already in `chrome.storage.local`'s
+  `importedJobs` map (recorded on every successful import, keyed by
+  job URL, with a timestamp). Reports how long ago in relative time.
+- **Imported** — success state; includes a fallback "Open Parviso"
+  button in case the auto-opened tab didn't come to focus.
+- **Import failed** — if opening the Parviso tab throws, the already-
+  captured job data isn't lost; "Retry import" re-attempts the same
+  open without re-extracting from the page.
+- **No LinkedIn job found** — wrong page / extraction failed.
 
 ## Known limitation
 
@@ -70,18 +96,25 @@ To test against a local frontend instead of production, change
 ## Structure
 
 ```
-manifest.json       Manifest V3, activeTab + scripting only, no host_permissions
-popup/popup.html    Three states: job detected, imported, wrong page
-popup/popup.css     Direction C palette, system font stack (see note in file)
-popup/popup.js      Tab check → on-demand extraction → import handoff
+manifest.json       Manifest V3, activeTab + scripting + storage, no host_permissions
+popup/popup.html    Seven states — see "Popup states" above
+popup/popup.css     Exact palette/spacing/radii from the Pencil design, system font stack (see note in file)
+popup/popup.js      Tab check → on-demand extraction → incomplete/duplicate checks → import handoff
 src/extract.js      Injected into the LinkedIn tab on click; see file header
-icons/              16/32/128px from the approved Pencil design (Export'd directly,
-                    48px kept for the chrome://extensions management page)
+icons/              16/32/48/128px from the approved Pencil design (Export'd directly)
 ```
+
+Icons inside the popup itself (checkmarks, warning triangle, briefcase,
+etc.) are inlined SVG pulled verbatim from the `lucide-static` npm
+package to match the design's icon references exactly, rather than
+approximated by hand.
 
 ## Not built yet
 
-- The `/workspace?import=` receiving end on the Parviso web app.
-- Testing against a real, authenticated LinkedIn session.
+- Testing against a real, authenticated LinkedIn session (verified only
+  against the logged-out public job page — see "Known limitation" above).
 - Any other job board (Indeed, etc.) — intentionally out of scope for v0.1.
 - Chrome Web Store listing/submission.
+- `parvisoBaseUrl` is a `chrome.storage.local` override hook that exists
+  in code (`getParvisoBaseUrl()`) but has no UI to actually set it yet —
+  today only `DEFAULT_PARVISO_URL` in the source is realistic to change.

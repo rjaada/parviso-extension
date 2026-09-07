@@ -6,12 +6,22 @@
 <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <header class="header">
+  <!-- ═══ 1. JOB DETECTED (default header) ═══ -->
+  <header id="header-default" class="header">
     <div class="brand">
       <img src="../icons/icon32.png" alt="" class="brand-mark" />
       <span class="brand-name">Parviso</span>
     </div>
-    <span id="header-tag" class="header-tag" hidden>READY TO IMPORT</span>
+    <span id="header-tag-default" class="header-tag"></span>
+  </header>
+
+  <!-- ═══ 2. Recovery states (compact header) ═══ -->
+  <header id="header-compact" class="header header--compact" hidden>
+    <div class="brand">
+      <img src="../icons/icon32.png" alt="" class="brand-mark" />
+      <span class="brand-name">Parviso</span>
+    </div>
+    <span id="header-tag-compact" class="header-tag"></span>
   </header>
 
   <main>
@@ -28,24 +38,76 @@
         <li id="chk-words">Full description</li>
         <li>Page URL attached</li>
       </ul>
-      <button id="import-btn" type="button" class="primary-btn">
-        <span aria-hidden="true">↗</span> Import and open Parviso
+      <button id="preview-btn" type="button" class="outline-btn">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2448E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.3 16.3 15 18"/></svg>
+        <span>Preview description</span>
       </button>
-      <p class="footnote">Parviso reads this job only when you click Import.</p>
+      <div id="preview-box" class="preview-box" hidden><pre id="preview-text"></pre></div>
+      <button id="import-btn" type="button" class="primary-btn">
+        <svg class="icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        <span>Import and open Parviso</span>
+      </button>
+      <p class="footnote">Nothing is sent to Parviso until you click Import.</p>
     </section>
 
     <section id="state-imported" hidden class="center-state">
-      <div class="check-circle" aria-hidden="true">✓</div>
-      <h1>Imported ✓</h1>
+      <div class="seal" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h1>Imported</h1>
       <p id="imported-title" class="subline strong"></p>
       <p id="imported-company" class="subline"></p>
+      <p class="next-line">Opening Parviso with the job description pre-filled…</p>
+      <button id="open-fallback-btn" type="button" class="primary-btn compact">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        <span>Open Parviso</span>
+      </button>
     </section>
 
     <section id="state-wrong" hidden class="center-state">
-      <div class="wrong-icon" aria-hidden="true">⌕</div>
+      <div class="icon-box icon-box--warm" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A65A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12h.01"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M22 13a18.15 18.15 0 0 1-20 0"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+      </div>
       <h1>No LinkedIn job found</h1>
-      <p class="subline">Open a job posting on LinkedIn, then click the Parviso icon again.</p>
-      <a class="link" href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer">Open LinkedIn Jobs →</a>
+      <p class="subline">Open a LinkedIn job posting, then click the Parviso extension again.</p>
+      <button id="open-linkedin-btn" type="button" class="outline-btn compact">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121211" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        <span>Open LinkedIn Jobs</span>
+      </button>
+    </section>
+
+    <section id="state-incomplete" hidden class="center-state">
+      <div class="icon-box icon-box--warm" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A65A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      </div>
+      <h1>Description looks incomplete</h1>
+      <p id="incomplete-message" class="subline"></p>
+      <button id="preview-correct-btn" type="button" class="primary-btn">
+        <span>Preview and correct</span>
+      </button>
+      <div id="preview-box-incomplete" class="preview-box" hidden><pre id="preview-text-incomplete"></pre></div>
+    </section>
+
+    <section id="state-failed" hidden class="center-state">
+      <div class="icon-box icon-box--error" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+      </div>
+      <h1>Import failed</h1>
+      <p class="subline">The capture is still available in this popup. Check your connection and try again.</p>
+      <button id="retry-btn" type="button" class="danger-btn">
+        <span>Retry import</span>
+      </button>
+    </section>
+
+    <section id="state-already" hidden class="center-state">
+      <div class="icon-box icon-box--info" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2448E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 15 2 2 4-4"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+      </div>
+      <h1>Job already imported</h1>
+      <p id="already-message" class="subline"></p>
+      <button id="open-existing-btn" type="button" class="primary-btn">
+        <span>Open existing job</span>
+      </button>
     </section>
   </main>
 
